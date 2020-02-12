@@ -10,7 +10,5 @@ git clone <repository>
 cd chord
 mkdir build
 cd build
-cmake ..
-make
-make test
+cmake .. && make && make test
 ```
