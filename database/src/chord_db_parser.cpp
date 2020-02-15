@@ -58,6 +58,13 @@ rapidjson::Document parse(const std::string& jsonChord)
     return document;
 }
 
+std::string getErrorAsString(const rapidjson::SchemaValidator& validator)
+{
+    rapidjson::StringBuffer error;
+    validator.GetInvalidDocumentPointer().StringifyUriFragment(error);
+    return error.GetString();
+}
+
 }
 
 
@@ -84,12 +91,10 @@ std::string ChordDatabaseParser::reportError(const std::string& jsonChord) const
     rapidjson::SchemaValidator validator(makeSchema());
     if(not document.Accept(validator))
     {
-        rapidjson::StringBuffer error;
-        validator.GetInvalidDocumentPointer().StringifyUriFragment(error);
-        return error.GetString();
+        return getErrorAsString(validator);
     }
+
     throw std::runtime_error("Document is valid !");
 }
 
 }}}
-
