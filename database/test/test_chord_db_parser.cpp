@@ -36,7 +36,9 @@ public:
 TEST_F(TestChordDatabaseParser, Validity)
 {
     EXPECT_FALSE(_parser.isValid(""));
+    EXPECT_EQ("Parsing error", _parser.reportError(""));
+    EXPECT_FALSE(_parser.isValid("[]"));
+    EXPECT_EQ("#", _parser.reportError("[]"));
 }
 
 }}}}
-
