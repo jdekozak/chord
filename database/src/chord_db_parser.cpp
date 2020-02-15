@@ -55,8 +55,8 @@ void addMember(rapidjson::Value& parent,
 
 template<typename Allocator>
 void addSecondLevelProperties(rapidjson::Value& properties,
-                             rapidjson::Value& required,
-                             Allocator& allocator)
+                              rapidjson::Value& required,
+                              Allocator& allocator)
 {
     rapidjson::Value frets(rapidjson::kObjectType);
     addStringMember(frets, "type", "string", allocator);
@@ -78,6 +78,27 @@ void addSecondLevelProperties(rapidjson::Value& properties,
 }
 
 template<typename Allocator>
+void fillPositions(rapidjson::Value& positions, Allocator& allocator)
+{
+    rapidjson::Value items(rapidjson::kObjectType);
+    addStringMember(items, "type", "object", allocator);
+
+    rapidjson::Value propertiesOfItems(rapidjson::kObjectType);
+    rapidjson::Value requiredOfItems(rapidjson::kArrayType);
+
+    addSecondLevelProperties(propertiesOfItems, requiredOfItems, allocator);
+
+    addMember(items, requiredOfItems, "required", allocator);
+    addMember(items, propertiesOfItems, "properties", allocator);
+    addMember(positions, items, "items", allocator);
+    addStringMember(positions, "type", "array", allocator);
+
+    rapidjson::Value minItems(rapidjson::kNumberType);
+    minItems.SetInt(1);
+    addMember(positions, minItems, "minItems", allocator);
+}
+
+template<typename Allocator>
 void addFirstLevelProperties(rapidjson::Value& properties,
                              rapidjson::Value& required,
                              Allocator& allocator)
@@ -93,26 +114,7 @@ void addFirstLevelProperties(rapidjson::Value& properties,
     required.PushBack(rapidjson::Value("suffix").Move(), allocator);
 
     rapidjson::Value positions(rapidjson::kObjectType);
-
-    rapidjson::Value items(rapidjson::kObjectType);
-    addStringMember(items, "type", "object", allocator);
-
-    rapidjson::Value propertiesOfItems(rapidjson::kObjectType);
-    rapidjson::Value requiredOfItems(rapidjson::kArrayType);
-
-    addSecondLevelProperties(propertiesOfItems, requiredOfItems, allocator);
-
-    addMember(items, requiredOfItems, "required", allocator);
-    addMember(items, propertiesOfItems, "properties", allocator);
-
-    addMember(positions, items, "items", allocator);
-
-    addStringMember(positions, "type", "array", allocator);
-
-    rapidjson::Value minItems(rapidjson::kNumberType);
-    minItems.SetInt(1);
-    addMember(positions, minItems, "minItems", allocator);
-
+    fillPositions(positions, allocator);
     addMember(properties, positions, "positions", allocator);
     required.PushBack(rapidjson::Value("positions").Move(), allocator);
 }
