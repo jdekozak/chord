@@ -1,4 +1,4 @@
-add_executable(testDatabase main.cpp test_chord_db_parser.cpp)
+add_executable(testDatabase main.cpp test_chord_db_parser.cpp test_chord_db_file_reader.cpp)
 
 target_link_libraries(testDatabase database)
 target_link_libraries(testDatabase gtest gtest_main gmock gmock_main)
