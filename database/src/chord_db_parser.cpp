@@ -17,6 +17,8 @@
 
 #include <tohoc/chord/database/chord_db_parser.h>
 
+#include <algorithm>
+
 #include <rapidjson/document.h>
 #include <rapidjson/schema.h>
 #include <rapidjson/error/en.h>
@@ -155,6 +157,34 @@ std::string getErrorAsString(const rapidjson::SchemaValidator& validator)
     return error.GetString();
 }
 
+Position buildPosition(const rapidjson::Value& position)
+{
+    return Position
+    {
+        position["fingers"].GetString(),
+        position["frets"].GetString(),
+        position.HasMember("barres")
+            ? position["barres"].GetUint64()
+            : 0U,
+        position.HasMember("capo")
+            ? position["capo"].GetBool()
+            : false,
+    };
+}
+
+std::vector<Position> buildPositions(const rapidjson::Value& positions)
+{
+    std::vector<Position> result;
+    result.reserve(positions.Size());
+
+    std::transform(positions.Begin(),
+                   positions.End(),
+                   std::back_inserter(result),
+                   &buildPosition);
+
+    return result;
+}
+
 }
 
 
@@ -187,6 +217,17 @@ std::string ChordDatabaseParser::reportError(const std::string& jsonChord) const
     }
 
     throw std::runtime_error("Document is valid !");
+}
+
+Chord ChordDatabaseParser::build(const std::string& jsonChord) const
+{
+    auto document = parse(jsonChord);
+    return Chord
+    {
+        buildPositions(document["positions"]),
+        document["suffix"].GetString(),
+        document["key"].GetString()
+    };
 }
 
 }}}

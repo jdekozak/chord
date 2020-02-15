@@ -25,7 +25,7 @@ class ChordDatabaseParser
 public:
     bool isValid(const std::string& jsonChord) const;
     std::string reportError(const std::string& jsonChord) const;
+    Chord build(const std::string& jsonChord) const;
 };
 
 }}}
-

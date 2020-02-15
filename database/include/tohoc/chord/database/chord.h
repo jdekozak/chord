@@ -25,13 +25,11 @@
 
 namespace tohoc { namespace chord { namespace database {
 
-class Chord
+struct Chord
 {
-public:
      const std::vector<Position> positions;
      const std::string suffix;
      const std::string key;
 };
 
 }}}
-

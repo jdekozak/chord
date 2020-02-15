@@ -87,6 +87,23 @@ TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
 }
 )";
     EXPECT_TRUE(_parser.isValid(CSharpMajor));
+
+    auto chord = _parser.build(CSharpMajor);
+    EXPECT_EQ("C#", chord.key);
+    EXPECT_EQ("major", chord.suffix);
+    EXPECT_EQ(4U, chord.positions.size());
+
+    auto firstPosition = chord.positions.front();
+    EXPECT_EQ("x43121", firstPosition.frets);
+    EXPECT_EQ("043121", firstPosition.fingers);
+    EXPECT_EQ(1U, firstPosition.barres);
+    EXPECT_FALSE(firstPosition.capo);
+
+    auto lastPosition = chord.positions.back();
+    EXPECT_EQ("9bba99", lastPosition.frets);
+    EXPECT_EQ("134211", lastPosition.fingers);
+    EXPECT_EQ(9U, lastPosition.barres);
+    EXPECT_TRUE(lastPosition.capo);
 }
 
 }}}}

@@ -18,18 +18,16 @@
 #pragma once
 
 #include <string>
-#include <optional>
 
 
 namespace tohoc { namespace chord { namespace database {
 
-class Position
+struct Position
 {
-public:
     const std::string fingers;
     const std::string frets;
-    const std::optional<uint8_t> barres;
-    const std::optional<bool> capo;
+    const uint64_t barres;
+    const bool capo;
 };
 
 }}}
