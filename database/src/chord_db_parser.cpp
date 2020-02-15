@@ -31,8 +31,7 @@ void addStringMember(rapidjson::Value& parent,
                      const std::string& value,
                      Allocator& allocator)
 {
-    rapidjson::Value child(rapidjson::kStringType);
-    child.SetString(value.c_str(), value.size(), allocator);
+    rapidjson::Value child(value.c_str(), value.size(), allocator);
 
     rapidjson::Value member(name.c_str(), name.size(), allocator);
 
@@ -42,7 +41,10 @@ void addStringMember(rapidjson::Value& parent,
 rapidjson::SchemaDocument makeSchema()
 {
     rapidjson::Document document(rapidjson::kObjectType);
-    addStringMember(document, "type", "object", document.GetAllocator());
+    auto& allocator = document.GetAllocator();
+
+    addStringMember(document, "title", "chord", allocator);
+    addStringMember(document, "type", "object", allocator);
 
     rapidjson::SchemaDocument schema(document);
 

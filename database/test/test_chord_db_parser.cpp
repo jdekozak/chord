@@ -33,12 +33,18 @@ public:
     ChordDatabaseParser _parser;
 };
 
-TEST_F(TestChordDatabaseParser, Validity)
+TEST_F(TestChordDatabaseParser, Invalid)
 {
     EXPECT_FALSE(_parser.isValid(""));
     EXPECT_EQ("Parsing error", _parser.reportError(""));
     EXPECT_FALSE(_parser.isValid("[]"));
     EXPECT_EQ("#", _parser.reportError("[]"));
+}
+
+TEST_F(TestChordDatabaseParser, Valid)
+{
+    EXPECT_TRUE(_parser.isValid("{}"));
+    EXPECT_THROW(_parser.reportError("{}"), std::runtime_error);
 }
 
 }}}}
