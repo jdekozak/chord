@@ -36,7 +36,7 @@ public:
 TEST_F(TestChordDatabaseParser, Invalid)
 {
     EXPECT_FALSE(_parser.isValid(""));
-    EXPECT_EQ("Parsing error", _parser.reportError(""));
+    EXPECT_EQ("The document is empty.", _parser.reportError(""));
     EXPECT_FALSE(_parser.isValid("[]"));
     EXPECT_EQ("#", _parser.reportError("[]"));
 }
@@ -45,6 +45,18 @@ TEST_F(TestChordDatabaseParser, Valid)
 {
     EXPECT_TRUE(_parser.isValid("{}"));
     EXPECT_THROW(_parser.reportError("{}"), std::runtime_error);
+}
+
+TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
+{
+    auto CSharpMajor = R"(
+{
+    "key": "C#",
+    "suffix": "major",
+    "positions": []
+}
+)";
+    EXPECT_TRUE(_parser.isValid(CSharpMajor));
 }
 
 }}}}
