@@ -37,14 +37,21 @@ TEST_F(TestChordDatabaseParser, Invalid)
 {
     EXPECT_FALSE(_parser.isValid(""));
     EXPECT_EQ("The document is empty.", _parser.reportError(""));
+
     EXPECT_FALSE(_parser.isValid("[]"));
     EXPECT_EQ("#", _parser.reportError("[]"));
-}
 
-TEST_F(TestChordDatabaseParser, Valid)
-{
-    EXPECT_TRUE(_parser.isValid("{}"));
-    EXPECT_THROW(_parser.reportError("{}"), std::runtime_error);
+    EXPECT_FALSE(_parser.isValid("{}"));
+    EXPECT_EQ("#", _parser.reportError("{}"));
+
+    EXPECT_FALSE(_parser.isValid(R"({"key":"C","suffix": "major"})"));
+    EXPECT_EQ("#", _parser.reportError(R"({"key":"C","suffix": "major"})"));
+
+    EXPECT_FALSE(_parser.isValid(R"({"key":"C","positions": []})"));
+    EXPECT_EQ("#/positions", _parser.reportError(R"({"key":"C","positions": []})"));
+    
+    EXPECT_FALSE(_parser.isValid(R"({"suffix":"major","positions": []})"));
+    EXPECT_EQ("#/positions", _parser.reportError(R"({"suffix":"major","positions": []})"));
 }
 
 TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
@@ -53,7 +60,30 @@ TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
 {
     "key": "C#",
     "suffix": "major",
-    "positions": []
+    "positions": [
+        {
+            "frets": "x43121",
+            "fingers": "043121",
+            "barres": 1
+        },
+        {
+            "frets": "446664",
+            "fingers": "112341",
+            "barres": 4,
+            "capo": true
+        },
+        {
+            "frets": "986669",
+            "fingers": "321114",
+            "barres": 6
+        },
+        {
+            "frets": "9bba99",
+            "fingers": "134211",
+            "barres": 9,
+            "capo": true
+        }
+    ]
 }
 )";
     EXPECT_TRUE(_parser.isValid(CSharpMajor));

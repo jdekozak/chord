@@ -42,15 +42,79 @@ void addStringMember(rapidjson::Value& parent,
 }
 
 template<typename Allocator>
-void addObjectMember(rapidjson::Value& parent,
-                     rapidjson::Value& child,
-                     const std::string& name,
-                     Allocator& allocator)
+void addMember(rapidjson::Value& parent,
+               rapidjson::Value& child,
+               const std::string& name,
+               Allocator& allocator)
 {
     rapidjson::Value member(rapidjson::kStringType);
     member.SetString(name.c_str(), name.length(), allocator);
 
     parent.AddMember(member, child, allocator);
+}
+
+template<typename Allocator>
+void addSecondLevelProperties(rapidjson::Value& properties,
+                             rapidjson::Value& required,
+                             Allocator& allocator)
+{
+    rapidjson::Value frets(rapidjson::kObjectType);
+    addStringMember(frets, "type", "string", allocator);
+    addMember(properties, frets, "frets", allocator);
+    required.PushBack(rapidjson::Value("frets").Move(), allocator);
+
+    rapidjson::Value fingers(rapidjson::kObjectType);
+    addStringMember(fingers, "type", "string", allocator);
+    addMember(properties, fingers, "fingers", allocator);
+    required.PushBack(rapidjson::Value("fingers").Move(), allocator);
+
+    rapidjson::Value barres(rapidjson::kObjectType);
+    addStringMember(barres, "type", "integer", allocator);
+    addMember(properties, barres, "barres", allocator);
+
+    rapidjson::Value capo(rapidjson::kObjectType);
+    addStringMember(capo, "type", "boolean", allocator);
+    addMember(properties, capo, "capo", allocator);
+}
+
+template<typename Allocator>
+void addFirstLevelProperties(rapidjson::Value& properties,
+                             rapidjson::Value& required,
+                             Allocator& allocator)
+{
+    rapidjson::Value key(rapidjson::kObjectType);
+    addStringMember(key, "type", "string", allocator);
+    addMember(properties, key, "key", allocator);
+    required.PushBack(rapidjson::Value("key").Move(), allocator);
+
+    rapidjson::Value suffix(rapidjson::kObjectType);
+    addStringMember(suffix, "type", "string", allocator);
+    addMember(properties, suffix, "suffix", allocator);
+    required.PushBack(rapidjson::Value("suffix").Move(), allocator);
+
+    rapidjson::Value positions(rapidjson::kObjectType);
+
+    rapidjson::Value items(rapidjson::kObjectType);
+    addStringMember(items, "type", "object", allocator);
+
+    rapidjson::Value propertiesOfItems(rapidjson::kObjectType);
+    rapidjson::Value requiredOfItems(rapidjson::kArrayType);
+
+    addSecondLevelProperties(propertiesOfItems, requiredOfItems, allocator);
+
+    addMember(items, requiredOfItems, "required", allocator);
+    addMember(items, propertiesOfItems, "properties", allocator);
+
+    addMember(positions, items, "items", allocator);
+
+    addStringMember(positions, "type", "array", allocator);
+
+    rapidjson::Value minItems(rapidjson::kNumberType);
+    minItems.SetInt(1);
+    addMember(positions, minItems, "minItems", allocator);
+
+    addMember(properties, positions, "positions", allocator);
+    required.PushBack(rapidjson::Value("positions").Move(), allocator);
 }
 
 rapidjson::Document makeSchema()
@@ -65,20 +129,12 @@ rapidjson::Document makeSchema()
     addStringMember(document, "type", "object", allocator);
 
     rapidjson::Value properties(rapidjson::kObjectType);
+    rapidjson::Value required(rapidjson::kArrayType);
 
-    rapidjson::Value key(rapidjson::kObjectType);
-    addStringMember(key, "type", "string", allocator);
-    addObjectMember(properties, key, "key", allocator);
+    addFirstLevelProperties(properties, required, allocator);
 
-    rapidjson::Value suffix(rapidjson::kObjectType);
-    addStringMember(suffix, "type", "string", allocator);
-    addObjectMember(properties, suffix, "suffix", allocator);
-
-    rapidjson::Value positions(rapidjson::kObjectType);
-    addStringMember(positions, "type", "array", allocator);
-    addObjectMember(properties, positions, "positions", allocator);
-
-    addObjectMember(document, properties, "properties", allocator);
+    addMember(document, required, "required", allocator);
+    addMember(document, properties, "properties", allocator);
 
     return document;
 }
