@@ -18,3 +18,4 @@ include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
 enable_testing()
 
 add_subdirectory (database)
+add_subdirectory (loader)
