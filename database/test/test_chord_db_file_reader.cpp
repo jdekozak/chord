@@ -19,6 +19,8 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
+
 
 namespace tohoc { namespace chord { namespace database { namespace test {
 
@@ -28,14 +30,26 @@ public:
     TestChordDatabaseFileReader() :
         _reader()
     {
+        std::remove("C#.json");
     }
 
     ChordDatabaseFileReader _reader;
 };
 
-TEST_F(TestChordDatabaseFileReader, Echo)
+TEST_F(TestChordDatabaseFileReader, InvalidStream)
 {
-    EXPECT_EQ("path", _reader.read("path"));
+    std::ifstream input("C#.json");
+    ASSERT_THROW(_reader.read(input), std::runtime_error);
+}
+
+TEST_F(TestChordDatabaseFileReader, ReadContent)
+{
+    {
+        std::ofstream output("C#.json");
+        output << R"({"key":"C#"})";
+    }
+    std::ifstream input("C#.json");
+    EXPECT_EQ(R"({"key":"C#"})", _reader.read(input));
 }
 
 }}}}

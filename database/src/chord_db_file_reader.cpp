@@ -17,13 +17,20 @@
 
 #include <tohoc/chord/database/chord_db_file_reader.h>
 
+#include <iterator>
+
 
 namespace tohoc { namespace chord { namespace database {
 
-std::string ChordDatabaseFileReader::read(const std::string& path) const
+std::string ChordDatabaseFileReader::read(std::ifstream& path) const
 {
-    return path;
-}
+    if(path.rdstate())
+    {
+        throw std::runtime_error("There is a problem with the file stream");
+    }
 
+    return std::string((std::istreambuf_iterator<char>(path)),
+                       (std::istreambuf_iterator<char>()));
+}
 
 }}}

@@ -16,6 +16,7 @@
  */
 
 #include <string>
+#include <fstream>
 
 
 namespace tohoc { namespace chord { namespace database {
@@ -23,7 +24,7 @@ namespace tohoc { namespace chord { namespace database {
 class ChordDatabaseFileReader
 {
 public:
-    std::string read(const std::string& path) const;
+    std::string read(std::ifstream& path) const;
 };
 
 }}}
