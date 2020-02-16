@@ -14,4 +14,4 @@ script:
   - export CXX=g++-7
   - cmake --version
   - mkdir build && cd build
-  - cmake .. && make && make test
+  - cmake .. && cmake --build . && ctest -V
