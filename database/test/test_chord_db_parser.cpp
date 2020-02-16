@@ -87,6 +87,7 @@ TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
 }
 )";
     EXPECT_TRUE(_parser.isValid(CSharpMajor));
+    ASSERT_THROW(_parser.reportError(CSharpMajor), std::runtime_error);
 
     auto chord = _parser.build(CSharpMajor);
     EXPECT_EQ("C#", chord.key);
