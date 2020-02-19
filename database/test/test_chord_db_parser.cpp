@@ -86,7 +86,7 @@ TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
     ]
 }
 )";
-    EXPECT_TRUE(_parser.isValid(CSharpMajor));
+    ASSERT_TRUE(_parser.isValid(CSharpMajor));
     ASSERT_THROW(_parser.reportError(CSharpMajor), std::runtime_error);
 
     auto chord = _parser.build(CSharpMajor);
@@ -97,14 +97,52 @@ TEST_F(TestChordDatabaseParser, ValidCSharpMajor)
     auto firstPosition = chord.positions.front();
     EXPECT_EQ("x43121", firstPosition.frets);
     EXPECT_EQ("043121", firstPosition.fingers);
-    EXPECT_EQ(1U, firstPosition.barres);
+    EXPECT_EQ(1U, firstPosition.barres.front());
     EXPECT_FALSE(firstPosition.capo);
 
     auto lastPosition = chord.positions.back();
     EXPECT_EQ("9bba99", lastPosition.frets);
     EXPECT_EQ("134211", lastPosition.fingers);
-    EXPECT_EQ(9U, lastPosition.barres);
+    EXPECT_EQ(9U, lastPosition.barres.front());
     EXPECT_TRUE(lastPosition.capo);
 }
+
+TEST_F(TestChordDatabaseParser, ValidG7Sharp9)
+{
+    auto G7Sharp9 = R"(
+{
+    "key": "G",
+    "suffix": "7#9",
+    "positions": [
+        {
+            "frets":"320301",
+            "fingers":"320401"
+        },
+        {
+            "frets":"353466",
+            "fingers":"131244",
+            "barres":[3,6],
+            "capo":true
+        },
+        {
+            "frets":"x55466",
+            "fingers":"023144",
+            "barres":6
+        },
+        {
+            "frets":"xa9abx",
+            "fingers":"021340"
+        }
+    ]
+}
+)";
+    ASSERT_TRUE(_parser.isValid(G7Sharp9));
+    auto chord = _parser.build(G7Sharp9);
+    auto secondPosition = chord.positions[1];
+    EXPECT_EQ(2U, secondPosition.barres.size());
+    EXPECT_EQ(3U, secondPosition.barres.front());
+    EXPECT_EQ(6U, secondPosition.barres.back());
+}
+
 
 }}}}

@@ -71,7 +71,18 @@ void addSecondLevelProperties(rapidjson::Value& properties,
     required.PushBack(rapidjson::Value("fingers").Move(), allocator);
 
     rapidjson::Value barres(rapidjson::kObjectType);
-    addStringMember(barres, "type", "integer", allocator);
+    rapidjson::Value oneOf(rapidjson::kArrayType);
+
+    rapidjson::Value simpleType(rapidjson::kObjectType);
+    addStringMember(simpleType, "type", "integer", allocator);
+    oneOf.PushBack(simpleType,allocator);
+
+    rapidjson::Value arrayType(rapidjson::kObjectType);
+    addStringMember(arrayType, "type", "array", allocator);
+    rapidjson::Value items(rapidjson::kObjectType);
+    addStringMember(items, "type", "integer", allocator);
+    oneOf.PushBack(arrayType,allocator);
+
     addMember(properties, barres, "barres", allocator);
 
     rapidjson::Value capo(rapidjson::kObjectType);
@@ -157,15 +168,38 @@ std::string getErrorAsString(const rapidjson::SchemaValidator& validator)
     return error.GetString();
 }
 
+std::vector<uint64_t> buildBarresFromInteger(const rapidjson::Value& barres)
+{
+    return std::vector<uint64_t>{barres.GetUint64()};
+}
+
+std::vector<uint64_t> buildBarresFromArray(const rapidjson::Value& barres)
+{
+    std::vector<uint64_t> result;
+    result.reserve(barres.Size());
+
+    std::transform(barres.Begin(),
+                   barres.End(),
+                   std::back_inserter(result),
+                   [](const rapidjson::Value& element)
+                   {
+                       return element.GetUint64();
+                   });
+
+    return result;
+}
+
 Position buildPosition(const rapidjson::Value& position)
 {
     return Position
     {
         position["fingers"].GetString(),
         position["frets"].GetString(),
-        position.HasMember("barres")
-            ? position["barres"].GetUint64()
-            : 0U,
+        position.HasMember("barres") and position["barres"].IsUint64()
+            ? buildBarresFromInteger(position["barres"])
+            : position.HasMember("barres") and position["barres"].IsArray()
+                ? buildBarresFromArray(position["barres"])
+                : std::vector<uint64_t>{0U},
         position.HasMember("capo")
             ? position["capo"].GetBool()
             : false,

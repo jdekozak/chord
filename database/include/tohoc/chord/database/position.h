@@ -18,6 +18,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 
 namespace tohoc { namespace chord { namespace database {
@@ -26,7 +27,7 @@ struct Position
 {
     const std::string fingers;
     const std::string frets;
-    const uint64_t barres;
+    const std::vector<uint64_t> barres;
     const bool capo;
 };
 
