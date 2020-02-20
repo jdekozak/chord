@@ -15,4 +15,4 @@ script:
   - cmake --version
   - mkdir build && cd build
   - cmake .. && cmake --build . && ctest -V
-  - ./loader/src/loadDatabase ../3rdparty/chords-db/src/db/guitar/chords/*/*.js
+  - ls ../3rdparty/chords-db/src/db/guitar/chords/*/*.js | grep -v index | xargs ./loader/src/loadDatabase
