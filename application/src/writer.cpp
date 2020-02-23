@@ -18,12 +18,16 @@
 #include <tohoc/chord/application/writer.h>
 
 
-namespace tohoc { namespace chord { namespace loader {
+namespace tohoc { namespace chord { namespace application {
 
-class Loader final : public application::Writer::Loader
+Writer::Writer(std::unique_ptr<Writer::Loader> inLoader) :
+    loader(std::move(inLoader))
 {
-public:
-    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
-};
+}
+
+void Writer::toMidiFile(std::vector<MidiChord>&) const
+{
+    
+}
 
 }}}

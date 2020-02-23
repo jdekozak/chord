@@ -1,5 +1,6 @@
 include_directories(${CHORD_SOURCE_DIR}/loader/include)
 include_directories(${CHORD_SOURCE_DIR}/database/include)
+include_directories(${CHORD_SOURCE_DIR}/application/include)
 
 add_executable(testLoader
                main.cpp

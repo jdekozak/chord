@@ -19,6 +19,7 @@
 
 #include <array>
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 
 #include <tohoc/chord/database/chord_db_file_reader.h>
@@ -116,9 +117,9 @@ std::vector<unsigned char> convertToMidi(const database::Position& position)
 
 }
 
-std::vector<MidiChord> Loader::read(std::vector<std::ifstream>& paths) const
+std::vector<application::MidiChord> Loader::read(std::vector<std::ifstream>& paths) const
 {
-    std::vector<MidiChord> result;
+    std::vector<application::MidiChord> result;
     result.reserve(paths.size());
 
     tohoc::chord::database::ChordDatabaseFileReader reader;
@@ -142,7 +143,7 @@ std::vector<MidiChord> Loader::read(std::vector<std::ifstream>& paths) const
                        std::back_inserter(result),
                        [&chord](const auto& position)
                        {
-                           return MidiChord
+                           return application::MidiChord
                            {
                                chord.key + chord.suffix,
                                convertToMidi(position)

@@ -15,16 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <vector>
-#include <string>
+#include <gmock/gmock.h>
 
 
-namespace tohoc { namespace chord { namespace loader {
-
-struct MidiChord
+int main(int argc, char** argv)
 {
-    const std::string name;
-    const std::vector<unsigned char> chord;
-};
-
-}}}
+    testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
+}

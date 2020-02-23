@@ -17,13 +17,39 @@
 
 #include <tohoc/chord/application/writer.h>
 
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-namespace tohoc { namespace chord { namespace loader {
 
-class Loader final : public application::Writer::Loader
+namespace tohoc { namespace chord { namespace application { namespace test {
+
+namespace {
+
+class LoaderMock : public Writer::Loader
 {
 public:
-    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
+    MOCK_CONST_METHOD1(read, std::vector<MidiChord>(std::vector<std::ifstream>&));
 };
 
-}}}
+}
+    
+class TestWriter : public testing::Test
+{
+public:
+    TestWriter() :
+        loader(new testing::StrictMock<LoaderMock>),
+        writer(std::unique_ptr<Writer::Loader>(loader))
+    {
+    }
+
+    LoaderMock* loader;
+    Writer writer;
+};
+
+TEST_F(TestWriter, ToFile)
+{
+    
+    ASSERT_TRUE(true);
+}
+
+}}}}

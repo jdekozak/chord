@@ -15,15 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/writer.h>
+#include <vector>
+#include <string>
 
 
-namespace tohoc { namespace chord { namespace loader {
+namespace tohoc { namespace chord { namespace application {
 
-class Loader final : public application::Writer::Loader
+struct MidiChord
 {
-public:
-    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
+    const std::string name;
+    const std::vector<unsigned char> chord;
 };
 
 }}}

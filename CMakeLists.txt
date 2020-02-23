@@ -19,3 +19,4 @@ enable_testing()
 
 add_subdirectory (database)
 add_subdirectory (loader)
+add_subdirectory (application)

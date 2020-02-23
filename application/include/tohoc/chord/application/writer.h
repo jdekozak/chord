@@ -15,15 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/writer.h>
+#include <tohoc/chord/application/midi_chord.h>
+
+#include <fstream>
+#include <vector>
+#include <memory>
 
 
-namespace tohoc { namespace chord { namespace loader {
+namespace tohoc { namespace chord { namespace application {
 
-class Loader final : public application::Writer::Loader
+class Writer
 {
 public:
-    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
+    class Loader
+    {
+    public:
+        virtual std::vector<MidiChord> read(std::vector<std::ifstream>& paths) const = 0;
+
+        virtual ~Loader() = default;
+    };
+
+    explicit Writer(std::unique_ptr<Loader> loader);
+
+    void toMidiFile(std::vector<MidiChord>& chords) const;
+
+private:
+    std::unique_ptr<Loader> loader;
 };
 
 }}}
