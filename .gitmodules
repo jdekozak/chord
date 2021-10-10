@@ -9,4 +9,4 @@
 	url = https://github.com/tombatossals/chords-db.git
 [submodule "3rdparty/cxxmidi"]
 	path = 3rdparty/cxxmidi
-	url = https://github.com/5tan/cxxmidi
+	url = https://github.com/jdekozak/cxxmidi
