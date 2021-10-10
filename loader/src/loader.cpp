@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/loader/loader.h>
+#include <tohoc/chord/loader/loader.hpp>
 
 #include <array>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 
-#include <tohoc/chord/database/chord_db_file_reader.h>
-#include <tohoc/chord/database/chord_db_custom_json_adapter.h>
-#include <tohoc/chord/database/chord_db_parser.h>
+#include <tohoc/chord/database/chord_db_file_reader.hpp>
+#include <tohoc/chord/database/chord_db_custom_json_adapter.hpp>
+#include <tohoc/chord/database/chord_db_parser.hpp>
 
 
 namespace tohoc { namespace chord { namespace loader {
@@ -101,7 +101,7 @@ uint8_t toFretNumber(char fret)
 std::vector<unsigned char> convertToMidi(const database::Position& position)
 {
     std::vector<unsigned char> result;
-    result.reserve(6U);
+    result.reserve(StringNumber);
 
     for(uint8_t index = 0U; index < StringNumber; ++index)
     {

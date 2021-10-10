@@ -15,16 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/writer.hpp>
+#include <tohoc/chord/application/controller.hpp>
 
 #include <vector>
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 
 namespace tohoc { namespace chord { namespace application { namespace test {
 
 namespace {
+
+class LoaderMock : public Controller::Loader
+{
+public:
+    MOCK_CONST_METHOD1(read, std::vector<MidiChord>(std::vector<std::ifstream>&));
+};
 
 std::vector<unsigned char> OpenStrings
 {
@@ -32,21 +39,26 @@ std::vector<unsigned char> OpenStrings
 };
 
 }
-    
-class TestWriter : public testing::Test
+
+class TestController : public testing::Test
 {
 public:
-    TestWriter() :
-        writer()
+    TestController() :
+        loader(new testing::StrictMock<LoaderMock>),
+        controller(std::unique_ptr<Controller::Loader>(loader))
     {
     }
 
-    Writer writer;
+    LoaderMock* loader;
+    Controller controller;
 };
 
-TEST_F(TestWriter, ToFile)
+TEST_F(TestController, Run)
 {
-    ASSERT_NO_THROW(writer.toMidiFile(std::vector<MidiChord>{MidiChord{"OpenStrings",OpenStrings}}));
+    EXPECT_CALL(*loader, read(testing::_)).
+        WillOnce(testing::Return(std::vector<MidiChord>{MidiChord{"OpenStrings",OpenStrings}}));
+
+    ASSERT_NO_THROW(controller.run(R"(../../../3rdparty/chords-db/src/db/guitar/chords/)"););
 }
 
 }}}}

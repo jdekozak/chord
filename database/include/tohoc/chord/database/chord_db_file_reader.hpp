@@ -15,15 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
 #include <string>
+#include <fstream>
 
 
 namespace tohoc { namespace chord { namespace database {
 
-class ChordDatabaseCustomJsonAdapter
+class ChordDatabaseFileReader
 {
 public:
-    std::string adapt(const std::string& input) const;
+    std::string read(std::ifstream& path) const;
 };
 
 }}}

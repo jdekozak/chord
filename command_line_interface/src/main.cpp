@@ -15,16 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <vector>
-#include <string>
+#include <tohoc/chord/application/controller.hpp>
 
+#include <tohoc/chord/loader/loader.hpp>
 
-namespace tohoc { namespace chord { namespace application {
+#include <memory>
 
-struct MidiChord
+namespace {
+
+tohoc::chord::application::Controller makeController()
 {
-    const std::string name;
-    const std::vector<unsigned char> chord;
-};
+    return tohoc::chord::application::Controller
+    {
+        std::make_unique<tohoc::chord::loader::Loader>()
+    };
+}
 
-}}}
+}
+
+
+int main()
+{
+    makeController().run(R"(../3rdparty/chords-db/src/db/guitar/chords/)");
+    return 0;
+}

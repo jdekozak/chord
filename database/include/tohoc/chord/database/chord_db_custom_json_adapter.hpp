@@ -15,15 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/writer.h>
+#pragma once
+
+#include <string>
 
 
-namespace tohoc { namespace chord { namespace loader {
+namespace tohoc { namespace chord { namespace database {
 
-class Loader final : public application::Writer::Loader
+class ChordDatabaseCustomJsonAdapter
 {
 public:
-    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
+    std::string adapt(const std::string& input) const;
 };
 
 }}}

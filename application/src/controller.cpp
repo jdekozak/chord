@@ -15,15 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/loader/loader.hpp>
+#include <tohoc/chord/application/controller.hpp>
+#include <tohoc/chord/application/writer.hpp>
 
-#include <gtest/gtest.h>
-
-#include <fstream>
 #include <filesystem>
 
 
-namespace tohoc { namespace chord { namespace loader { namespace test {
+namespace tohoc { namespace chord { namespace application {
 
 namespace {
 
@@ -55,23 +53,15 @@ std::vector<std::ifstream> openChordFileDatabase(const std::string& relativePath
 
 }
 
-
-class TestLoader : public testing::Test
+Controller::Controller(std::unique_ptr<Controller::Loader> inLoader) :
+    loader(std::move(inLoader))
 {
-public:
-    TestLoader() :
-        loader()
-    {
-    }
-
-    Loader loader;
-};
-
-TEST_F(TestLoader, Collection)
-{
-    auto chordDatabase = openChordFileDatabase(R"(../../../3rdparty/chords-db/src/db/guitar/chords/)");
-    auto midiChords = loader.read(chordDatabase);
-    ASSERT_EQ(2069U, midiChords.size());
 }
 
-}}}}
+void Controller::run(const std::string& chordDatabasePath) const
+{
+    auto chordDatabase = openChordFileDatabase(chordDatabasePath);
+    Writer().toMidiFile(loader->read(chordDatabase));
+}
+
+}}}

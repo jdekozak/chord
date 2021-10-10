@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_custom_json_adapter.h>
+#include <tohoc/chord/database/chord_db_custom_json_adapter.hpp>
 
 #include <algorithm>
 #include <regex>

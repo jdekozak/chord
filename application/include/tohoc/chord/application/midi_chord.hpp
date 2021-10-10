@@ -15,16 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
+#include <vector>
 #include <string>
-#include <fstream>
 
 
-namespace tohoc { namespace chord { namespace database {
+namespace tohoc { namespace chord { namespace application {
 
-class ChordDatabaseFileReader
+struct MidiChord
 {
-public:
-    std::string read(std::ifstream& path) const;
+    const std::string name;
+    const std::vector<unsigned char> chord;
 };
 
 }}}

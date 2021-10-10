@@ -17,19 +17,15 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
-#include <tohoc/chord/database/position.h>
+#include <tohoc/chord/application/controller.hpp>
 
 
-namespace tohoc { namespace chord { namespace database {
+namespace tohoc { namespace chord { namespace loader {
 
-struct Chord
+class Loader final : public application::Controller::Loader
 {
-     const std::vector<Position> positions;
-     const std::string suffix;
-     const std::string key;
+public:
+    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
 };
 
 }}}

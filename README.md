@@ -11,5 +11,5 @@ cd chord
 mkdir build
 cd build
 cmake .. && cmake --build . && ctest -V
-ls ../3rdparty/chords-db/src/db/guitar/chords/*/*.js | grep -v index | xargs ./loader/src/loadDatabase
+./command_line_interface/src/chord
 ```

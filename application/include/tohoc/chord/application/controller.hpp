@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/midi_chord.h>
+#pragma once
+
+#include <tohoc/chord/application/midi_chord.hpp>
 
 #include <fstream>
 #include <vector>
@@ -24,7 +26,7 @@
 
 namespace tohoc { namespace chord { namespace application {
 
-class Writer
+class Controller
 {
 public:
     class Loader
@@ -35,9 +37,9 @@ public:
         virtual ~Loader() = default;
     };
 
-    explicit Writer(std::unique_ptr<Loader> loader);
+    explicit Controller(std::unique_ptr<Loader> loader);
 
-    void toMidiFile(std::vector<MidiChord>& chords) const;
+    void run(const std::string& chordDatabasePath) const;
 
 private:
     std::unique_ptr<Loader> loader;

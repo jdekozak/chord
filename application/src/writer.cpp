@@ -15,19 +15,76 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/application/writer.h>
+#include <tohoc/chord/application/writer.hpp>
+
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/note.hpp>
+#include <cxxmidi/instrument.hpp>
 
 
 namespace tohoc { namespace chord { namespace application {
 
-Writer::Writer(std::unique_ptr<Writer::Loader> inLoader) :
-    loader(std::move(inLoader))
+namespace {
+
+void chordOn(uint32_t deltatime, CxxMidi::Track& track, const std::vector<unsigned char>& chord, uint8_t velocity)
 {
+    track.push_back(CxxMidi::Event(deltatime,
+                                   CxxMidi::Message::NoteOn,
+                                   CxxMidi::Note(chord.front()),
+                                   velocity));
+
+    std::transform(chord.begin()+1,
+                   chord.end(),
+                   std::back_inserter(track),
+                   [&velocity](const auto note)
+                   {
+                        return CxxMidi::Event(0,
+                                              CxxMidi::Message::NoteOn,
+                                              CxxMidi::Note(note),
+                                              velocity);
+                   });
 }
 
-void Writer::toMidiFile(std::vector<MidiChord>&) const
+}
+
+
+void Writer::toMidiFile(const std::vector<MidiChord>& chords) const
 {
-    
+    // quartenote deltatime [ticks]
+    // What value should dt be, if we want quarter notes to last 0.5s?
+
+    // Default MIDI time division is 500ticks/quarternote.
+    // Default MIDI tempo is 500000us per quarternote
+    uint32_t deltatime = CxxMidi::Converters::us2dt(500000, // 0.5s
+                                    500000, // tempo [us/quarternote]
+                                    500); // time division [us/quarternote]
+
+    CxxMidi::File myFile;
+    CxxMidi::Track &track = myFile.addTrack();
+
+    track.push_back(CxxMidi::Event(0,
+                                   CxxMidi::Message::ProgramChange,
+                                   CxxMidi::Instrument::AcousticGuitarNylon));
+
+    for(const auto& chord : chords)
+    {
+        CxxMidi::Event chordName(0,
+                                 CxxMidi::Message::Meta,
+                                 CxxMidi::Message::Text);
+        chordName.insert(chordName.end(), chord.name.begin(), chord.name.end());
+        chordName.push_back(';');
+
+        track.push_back(chordName);
+        chordOn(0 , track, chord.chord, 100);
+        chordOn(deltatime, track, chord.chord, 0);
+    }
+
+    track.push_back(CxxMidi::Event(deltatime,
+                                   CxxMidi::Message::Meta,
+                                   CxxMidi::Message::EndOfTrack));
+
+    myFile.saveAs("chord.mid");
 }
 
 }}}
