@@ -15,41 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_file_reader.hpp>
+#include <tohoc/chord/application/writer.hpp>
+
+#include <vector>
 
 #include <gtest/gtest.h>
 
-#include <fstream>
 
+namespace tohoc { namespace chord { namespace application { namespace test {
 
-namespace tohoc { namespace chord { namespace database { namespace test {
+namespace {
 
-class TestChordDatabaseFileReader : public testing::Test
+std::vector<unsigned char> OpenStrings
 {
-public:
-    TestChordDatabaseFileReader() :
-        _reader()
-    {
-        std::remove("C#.json");
-    }
-
-    ChordDatabaseFileReader _reader;
+    40, 45, 50, 55, 59, 64
 };
 
-TEST_F(TestChordDatabaseFileReader, InvalidStream)
-{
-    std::ifstream input("C#.json");
-    ASSERT_THROW(_reader.read(input), std::runtime_error);
 }
-
-TEST_F(TestChordDatabaseFileReader, ReadContent)
+    
+class TestWriter : public testing::Test
 {
+public:
+    TestWriter() :
+        writer()
     {
-        std::ofstream output("C#.json");
-        output << R"({"key":"C#"})";
     }
-    std::ifstream input("C#.json");
-    EXPECT_EQ(R"({"key":"C#"})", _reader.read(input));
+
+    Writer writer;
+};
+
+TEST_F(TestWriter, ToFile)
+{
+    ASSERT_NO_THROW(writer.toMidiFile(std::vector<MidiChord>{MidiChord{"OpenStrings",OpenStrings}}));
 }
 
 }}}}

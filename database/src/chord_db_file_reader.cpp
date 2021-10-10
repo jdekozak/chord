@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_file_reader.h>
+#include <tohoc/chord/database/chord_db_file_reader.hpp>
 
 #include <iterator>
 

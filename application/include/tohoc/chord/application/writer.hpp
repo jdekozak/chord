@@ -15,17 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord.h>
+#pragma once
+
+#include <tohoc/chord/application/midi_chord.hpp>
+
+#include <fstream>
+#include <vector>
+#include <memory>
 
 
-namespace tohoc { namespace chord { namespace database {
+namespace tohoc { namespace chord { namespace application {
 
-class ChordDatabaseParser
+class Writer
 {
 public:
-    bool isValid(const std::string& jsonChord) const;
-    std::string reportError(const std::string& jsonChord) const;
-    Chord build(const std::string& jsonChord) const;
+    void toMidiFile(const std::vector<MidiChord>& chords) const;
 };
 
 }}}

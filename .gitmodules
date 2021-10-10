@@ -7,3 +7,6 @@
 [submodule "3rdparty/chords-db"]
 	path = 3rdparty/chords-db
 	url = https://github.com/tombatossals/chords-db.git
+[submodule "3rdparty/cxxmidi"]
+	path = 3rdparty/cxxmidi
+	url = https://github.com/5tan/cxxmidi

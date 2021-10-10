@@ -15,15 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
+#include <gmock/gmock.h>
 
 
-namespace tohoc { namespace chord { namespace database {
-
-class ChordDatabaseCustomJsonAdapter
+int main(int argc, char** argv)
 {
-public:
-    std::string adapt(const std::string& input) const;
-};
-
-}}}
+    testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
+}

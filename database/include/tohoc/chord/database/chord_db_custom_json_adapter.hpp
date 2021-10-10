@@ -15,29 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_custom_json_adapter.hpp>
+#pragma once
 
-#include <gtest/gtest.h>
+#include <string>
 
 
-namespace tohoc { namespace chord { namespace database { namespace test {
+namespace tohoc { namespace chord { namespace database {
 
-class TestChordDatabaseCustomJsonAdapter : public testing::Test
+class ChordDatabaseCustomJsonAdapter
 {
 public:
-    TestChordDatabaseCustomJsonAdapter() :
-        _adapter()
-    {
-    }
-
-    ChordDatabaseCustomJsonAdapter _adapter;
+    std::string adapt(const std::string& input) const;
 };
 
-TEST_F(TestChordDatabaseCustomJsonAdapter, Success)
-{
-    EXPECT_EQ("{}", _adapter.adapt("{}"));
-    EXPECT_EQ("{}", _adapter.adapt(" { \t}; \n"));
-    EXPECT_EQ(R"({"key":"C#","suffix":"major"})", _adapter.adapt("export default {key: 'C#', suffix:'major' \t}; \n"));
-}
-
-}}}}
+}}}

@@ -19,3 +19,6 @@ enable_testing()
 
 add_subdirectory (database)
 add_subdirectory (loader)
+add_subdirectory (application)
+
+add_subdirectory (command_line_interface)

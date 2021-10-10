@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_parser.h>
+#include <tohoc/chord/database/chord_db_parser.hpp>
 
 #include <algorithm>
 

@@ -15,41 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_file_reader.hpp>
+#pragma once
 
-#include <gtest/gtest.h>
+#include <tohoc/chord/application/midi_chord.hpp>
 
 #include <fstream>
+#include <vector>
+#include <memory>
 
 
-namespace tohoc { namespace chord { namespace database { namespace test {
+namespace tohoc { namespace chord { namespace application {
 
-class TestChordDatabaseFileReader : public testing::Test
+class Controller
 {
 public:
-    TestChordDatabaseFileReader() :
-        _reader()
+    class Loader
     {
-        std::remove("C#.json");
-    }
+    public:
+        virtual std::vector<MidiChord> read(std::vector<std::ifstream>& paths) const = 0;
 
-    ChordDatabaseFileReader _reader;
+        virtual ~Loader() = default;
+    };
+
+    explicit Controller(std::unique_ptr<Loader> loader);
+
+    void run(const std::string& chordDatabasePath) const;
+
+private:
+    std::unique_ptr<Loader> loader;
 };
 
-TEST_F(TestChordDatabaseFileReader, InvalidStream)
-{
-    std::ifstream input("C#.json");
-    ASSERT_THROW(_reader.read(input), std::runtime_error);
-}
-
-TEST_F(TestChordDatabaseFileReader, ReadContent)
-{
-    {
-        std::ofstream output("C#.json");
-        output << R"({"key":"C#"})";
-    }
-    std::ifstream input("C#.json");
-    EXPECT_EQ(R"({"key":"C#"})", _reader.read(input));
-}
-
-}}}}
+}}}

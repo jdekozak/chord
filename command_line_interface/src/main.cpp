@@ -15,29 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_custom_json_adapter.hpp>
+#include <tohoc/chord/application/controller.hpp>
 
-#include <gtest/gtest.h>
+#include <tohoc/chord/loader/loader.hpp>
 
+#include <memory>
 
-namespace tohoc { namespace chord { namespace database { namespace test {
+namespace {
 
-class TestChordDatabaseCustomJsonAdapter : public testing::Test
+tohoc::chord::application::Controller makeController()
 {
-public:
-    TestChordDatabaseCustomJsonAdapter() :
-        _adapter()
+    return tohoc::chord::application::Controller
     {
-    }
-
-    ChordDatabaseCustomJsonAdapter _adapter;
-};
-
-TEST_F(TestChordDatabaseCustomJsonAdapter, Success)
-{
-    EXPECT_EQ("{}", _adapter.adapt("{}"));
-    EXPECT_EQ("{}", _adapter.adapt(" { \t}; \n"));
-    EXPECT_EQ(R"({"key":"C#","suffix":"major"})", _adapter.adapt("export default {key: 'C#', suffix:'major' \t}; \n"));
+        std::make_unique<tohoc::chord::loader::Loader>()
+    };
 }
 
-}}}}
+}
+
+
+int main()
+{
+    makeController().run(R"(../3rdparty/chords-db/src/db/guitar/chords/)");
+    return 0;
+}

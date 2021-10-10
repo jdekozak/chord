@@ -15,41 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tohoc/chord/database/chord_db_file_reader.hpp>
+#pragma once
 
-#include <gtest/gtest.h>
-
+#include <string>
 #include <fstream>
 
 
-namespace tohoc { namespace chord { namespace database { namespace test {
+namespace tohoc { namespace chord { namespace database {
 
-class TestChordDatabaseFileReader : public testing::Test
+class ChordDatabaseFileReader
 {
 public:
-    TestChordDatabaseFileReader() :
-        _reader()
-    {
-        std::remove("C#.json");
-    }
-
-    ChordDatabaseFileReader _reader;
+    std::string read(std::ifstream& path) const;
 };
 
-TEST_F(TestChordDatabaseFileReader, InvalidStream)
-{
-    std::ifstream input("C#.json");
-    ASSERT_THROW(_reader.read(input), std::runtime_error);
-}
-
-TEST_F(TestChordDatabaseFileReader, ReadContent)
-{
-    {
-        std::ofstream output("C#.json");
-        output << R"({"key":"C#"})";
-    }
-    std::ifstream input("C#.json");
-    EXPECT_EQ(R"({"key":"C#"})", _reader.read(input));
-}
-
-}}}}
+}}}

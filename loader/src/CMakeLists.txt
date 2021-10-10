@@ -1,6 +1,7 @@
 include_directories(${CHORD_SOURCE_DIR}/database/include)
+include_directories(${CHORD_SOURCE_DIR}/application/include)
 
-add_executable(loadDatabase
-               main.cpp)
+add_library(loader
+            loader.cpp)
 
-target_link_libraries(loadDatabase database)
+target_link_libraries(loader database)

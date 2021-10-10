@@ -15,16 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
-#include <fstream>
+#pragma once
+
+#include <tohoc/chord/application/controller.hpp>
 
 
-namespace tohoc { namespace chord { namespace database {
+namespace tohoc { namespace chord { namespace loader {
 
-class ChordDatabaseFileReader
+class Loader final : public application::Controller::Loader
 {
 public:
-    std::string read(std::ifstream& path) const;
+    std::vector<application::MidiChord> read(std::vector<std::ifstream>& paths) const override;
 };
 
 }}}

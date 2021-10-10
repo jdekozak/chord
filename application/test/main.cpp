@@ -15,21 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include <string>
-#include <vector>
-
-#include <tohoc/chord/database/position.h>
+#include <gmock/gmock.h>
 
 
-namespace tohoc { namespace chord { namespace database {
-
-struct Chord
+int main(int argc, char** argv)
 {
-     const std::vector<Position> positions;
-     const std::string suffix;
-     const std::string key;
-};
-
-}}}
+    testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
+}
